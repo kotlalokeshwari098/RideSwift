@@ -1,6 +1,6 @@
-# Uber Clone API Documentation
+# RideSwift API Documentation
 
-This documentation provides details about the API endpoints available in the Uber Clone application.
+This documentation provides details about the API endpoints available in the RideSwift application.
 
 ## User Endpoints
 

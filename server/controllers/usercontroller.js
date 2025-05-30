@@ -26,8 +26,9 @@ module.exports.registerUser = async (req, res, next) => {
     email,
     password: hashedPass,
   });
+  console.log(user)
 
-  const token = await generateToken();
+  const token = await generateToken(user);
 
   res.status(201).json({ token, user });
 };
@@ -42,7 +43,7 @@ module.exports.loginUser = async (req, res, next) => {
 
   const { email, password } = req.body;
   const user = await userModel.findOne({ email }).select("+password");
-  console.log(user);
+  console.log("hashed password",user.password);
 
   if(!user){
     return res.status(401).json({message:"Invalid email or password"})
@@ -56,8 +57,13 @@ module.exports.loginUser = async (req, res, next) => {
   }
   
   if (comparedResult) {
-    const token = await generateToken();
+    const token = await generateToken(user);
 
     res.status(201).json({ token, user });
   }
 };
+
+module.exports.getUserProfile=async(req,res,next)=>{
+  console.log("user profile")
+      res.status(200).json(req.user)
+}
