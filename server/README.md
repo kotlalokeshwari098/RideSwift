@@ -413,3 +413,226 @@ Content-Type: application/json
 }
 ```
 
+### Login Captain
+
+Authenticates a captain and returns a token.
+
+**URL:** `/captain/login`
+
+**Method:** `POST`
+
+**Request Body:**
+```json
+{
+  "email": "string",     // Required, valid email format
+  "password": "string"   // Required, at least 6 characters
+}
+```
+
+**Response:**
+```json
+{
+  "token": "string",     // JWT token for authentication
+  "captain": {
+    "_id": "string",
+    "fullname": {
+      "firstname": "string",
+      "lastname": "string"
+    },
+    "email": "string",
+    "vehicle": {
+      "color": "string",
+      "plate": "string",
+      "capacity": number,
+      "vehicleType": "string"
+    },
+    "status": "string"
+    // Note: Password is not returned in the response
+  }
+}
+```
+
+**Status Codes:**
+- `201 Created`: Captain successfully authenticated
+- `400 Bad Request`: Validation error or missing fields
+- `401 Unauthorized`: Invalid email or password
+
+**Example Request:**
+```json
+POST /captain/login
+Content-Type: application/json
+
+{
+  "email": "ranga@gmail.com",
+  "password": "bts123"
+}
+```
+
+**Example Success Response:**
+```json
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "_id": "6839a1a701c7a210ec8f8b43",
+    "fullname": {
+      "firstname": "Ranga",
+      "lastname": "elit"
+    },
+    "email": "ranga@gmail.com",
+    "vehicle": {
+      "color": "red",
+      "plate": "MP 12 AB 1234",
+      "capacity": 3,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
+  }
+}
+```
+
+**Example Error Response:**
+```json
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "message": "Invalid email or password"
+}
+```
+
+### Captain Profile
+
+Retrieves the profile information of the authenticated captain.
+
+**URL:** `/captain/profile`
+
+**Method:** `GET`
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response:**
+```json
+{
+  "_id": "string",
+  "fullname": {
+    "firstname": "string",
+    "lastname": "string"
+  },
+  "email": "string",
+  "vehicle": {
+    "color": "string",
+    "plate": "string",
+    "capacity": number,
+    "vehicleType": "string"
+  },
+  "status": "string",
+  "location": {
+    "ltd": number,  // Optional
+    "lng": number   // Optional
+  }
+}
+```
+
+**Status Codes:**
+- `200 OK`: Successfully retrieved captain profile
+- `401 Unauthorized`: Invalid or missing token
+- `404 Not Found`: Captain not found
+
+**Example Request:**
+```
+GET /captain/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Example Success Response:**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "_id": "6839a1a701c7a210ec8f8b43",
+  "fullname": {
+    "firstname": "Ranga",
+    "lastname": "elit"
+  },
+  "email": "ranga@gmail.com",
+  "vehicle": {
+    "color": "red",
+    "plate": "MP 12 AB 1234",
+    "capacity": 3,
+    "vehicleType": "car"
+  },
+  "status": "inactive",
+  "location": {}
+}
+```
+
+**Example Error Response:**
+```json
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "message": "unauthorized - no token provided"
+}
+```
+
+### Logout Captain
+
+Logs out a captain by invalidating their token.
+
+**URL:** `/captain/logout`
+
+**Method:** `GET`
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Cookies:**
+- `token`: JWT token set during login
+
+**Response:**
+```json
+{
+  "message": "Logged out"
+}
+```
+
+**Status Codes:**
+- `200 OK`: Successfully logged out
+- `401 Unauthorized`: Invalid or missing token
+
+**Example Request:**
+```
+GET /captain/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Example Success Response:**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "message": "Logged out"
+}
+```
+
+**Example Error Response:**
+```json
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "message": "unauthorized - no token provided"
+}
+```
+
