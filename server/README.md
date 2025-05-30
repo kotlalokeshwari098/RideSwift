@@ -285,3 +285,131 @@ Content-Type: application/json
 }
 ```
 
+## Captain Endpoints
+
+### Register Captain
+
+Registers a new captain in the system.
+
+**URL:** `/captain/register`
+
+**Method:** `POST`
+
+**Request Body:**
+```json
+{
+  "fullname": {
+    "firstname": "string", // Required, at least 3 characters
+    "lastname": "string"   // Optional, at least 3 characters if provided
+  },
+  "email": "string",       // Required, valid email format
+  "password": "string",    // Required, at least 6 characters
+  "vehicle": {
+    "color": "string",     // Required, at least 3 characters
+    "plate": "string",     // Required, at least 3 characters
+    "capacity": number,    // Required, minimum 1
+    "vehicleType": "string" // Required, must be one of: "car", "motorcycle", "auto"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "token": "string",       // JWT token for authentication
+  "captain": {
+    "_id": "string",
+    "fullname": {
+      "firstname": "string",
+      "lastname": "string"
+    },
+    "email": "string",
+    "vehicle": {
+      "color": "string",
+      "plate": "string",
+      "capacity": number,
+      "vehicleType": "string"
+    },
+    "status": "string",    // "active" or "inactive", default is "inactive"
+    // Note: Password is not returned in the response
+  }
+}
+```
+
+**Status Codes:**
+- `201 Created`: Captain successfully registered
+- `400 Bad Request`: Validation error, missing fields, or email already exists
+
+**Example Request:**
+```json
+POST /captain/register
+Content-Type: application/json
+
+{
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Smith"
+  },
+  "email": "jane.smith@example.com",
+  "password": "securepassword",
+  "vehicle": {
+    "color": "Blue",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+**Example Success Response:**
+```json
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "_id": "507f1f77bcf86cd799439012",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@example.com",
+    "vehicle": {
+      "color": "Blue",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
+  }
+}
+```
+
+**Example Error Response:**
+```json
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+  "errors": [
+    {
+      "msg": "Invalid Email",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+OR
+
+```json
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+  "message": "captain with this email already exists"
+}
+```
+

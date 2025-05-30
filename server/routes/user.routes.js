@@ -1,8 +1,8 @@
 const express=require('express')
 const router=express.Router()
 const {body}=require('express-validator')
-const usercontroller=require('../controllers/usercontroller')
-const authMiddlewareRoute=require('../middlewares/authMiddleware.js')
+const usercontroller=require('../controllers/user.controller.js')
+const authMiddlewareRoute=require('../middlewares/auth.middleware.js')
 
 router.post('/register',
     [
