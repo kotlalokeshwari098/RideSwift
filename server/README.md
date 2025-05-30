@@ -169,3 +169,119 @@ Content-Type: application/json
   "message": "Invalid email or password"
 }
 ```
+
+### User Profile
+
+Retrieves the profile information of the authenticated user.
+
+**URL:** `/users/profile`
+
+**Method:** `GET`
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Response:**
+```json
+{
+  "_id": "string",
+  "fullname": {
+    "firstname": "string",
+    "lastname": "string"
+  },
+  "email": "string"
+}
+```
+
+**Status Codes:**
+- `200 OK`: Successfully retrieved user profile
+- `401 Unauthorized`: Invalid or missing token
+
+**Example Request:**
+```
+GET /users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Example Success Response:**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "_id": "507f1f77bcf86cd799439011",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com"
+}
+```
+
+**Example Error Response:**
+```json
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "message": "Not authorized, no token"
+}
+```
+
+
+### Logout User
+
+Logs out a user by invalidating their token.
+
+**URL:** `/users/logout`
+
+**Method:** `GET`
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Cookies:**
+- `token`: JWT token set during login
+
+**Response:**
+```json
+{
+  "message": "Logged out"
+}
+```
+
+**Status Codes:**
+- `200 OK`: Successfully logged out
+- `401 Unauthorized`: Invalid or missing token
+
+**Example Request:**
+```
+GET /users/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Example Success Response:**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "message": "Logged out"
+}
+```
+
+**Example Error Response:**
+```json
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "message": "Not authorized, no token"
+}
+```
+
