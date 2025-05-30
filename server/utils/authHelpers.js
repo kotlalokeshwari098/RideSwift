@@ -7,7 +7,7 @@ const jwt=require('jsonwebtoken')
 module.exports.generateToken=(user)=>{
     console.log("email is",user)
     console.log("JWT secret is",process.env.JWT_SECRET)
-  let token=jwt.sign({email:user.email,id:user._id},process.env.JWT_SECRET)
+  let token=jwt.sign({email:user.email,id:user._id}, process.env.JWT_SECRET,{expiresIn:'24h'})
     return token;
 }
 module.exports.comparePassword=async(password,hashedPassword)=>{
