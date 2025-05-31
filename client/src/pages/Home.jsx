@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import uberlogo from '../assets/uberlogo.webp'
 import mainPic from '../assets/mainpic.avif';
 
