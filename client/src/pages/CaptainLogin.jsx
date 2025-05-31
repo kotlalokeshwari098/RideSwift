@@ -1,19 +1,33 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import axiosInstance from "../api/axiosConfig";
+import { CaptainDataContext } from "../context/CaptainContext";
+import { useNavigate } from "react-router-dom";
 
 const CaptainLogin = () => {
+  const {captain,setCaptain}=useContext(CaptainDataContext)
+  const navigate=useNavigate()
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  console.log(captain)
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(form);
-    setForm({
-      email: "",
-      password: "",
-    });
+    const response=await axiosInstance.post('/captain/login',form)
+    
+    if(response){
+      setCaptain(response.data.captain)
+      localStorage.setItem('token',response.data.token)
+      navigate('/captainhome')
+      setForm({
+        email: "",
+        password: "",
+      });
+    }
   };
 
   return (

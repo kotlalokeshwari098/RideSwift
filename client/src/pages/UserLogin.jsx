@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import axiosInstance from "../api/axiosConfig";
+import { useNavigate } from "react-router-dom";
+import { UserDataContext } from "../context/UserContext";
 
 const UserLogin = () => {
   const [form, setForm] = useState({
@@ -7,9 +10,21 @@ const UserLogin = () => {
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  const { user, setUser } = useContext(UserDataContext);
+  const navigate = useNavigate();
+  console.log(user);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(form);
+    const response = await axiosInstance.post("/user/login", form);
+    console.log(response);
+
+    if (response) {
+      setUser(response.data.user);
+      localStorage.setItem("token",response.data.token)
+      navigate("/home");
+    }
     setForm({
       email: "",
       password: "",
@@ -52,17 +67,16 @@ const UserLogin = () => {
           <button className="bg-[#111] rounded px-4 py-2 text-white mt-2">
             Login
           </button>
-           <p className="my-3 text-center">
-          New here?{" "}
-          <Link to="/signup" className="text-blue-600">
-            Create new Account
-          </Link>
-        </p>
+          <p className="my-3 text-center">
+            New here?{" "}
+            <Link to="/signup" className="text-blue-600">
+              Create new Account
+            </Link>
+          </p>
         </form>
       </div>
       <div>
-       
-        <Link to='/captainlogin'>
+        <Link to="/captainlogin">
           <button className="bg-[#10b461] rounded px-4 py-2 text-white  w-full">
             Sign in as captain
           </button>

@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+import {UserDataContext} from '../context/UserContext'
+import { useContext } from "react";
+import axiosInstance from "../api/axiosConfig";
 
 const UserRegister = () => {
   const [form, setForm] = useState({
@@ -9,9 +12,30 @@ const UserRegister = () => {
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  const navigate=useNavigate();
+
+  const {user,setUser}=useContext(UserDataContext)
+  console.log(user)
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(form);
+    const newUser={
+      fullname:{
+        firstname:form.firstname,
+        lastname:form.lastname
+      },
+      email:form.email,
+      password:form.password
+    }
+    console.log(newUser)
+
+    const response=await axiosInstance.post('/user/register',newUser)
+    if(response.status===201){
+      const data=response.data;
+      setUser(data.user)
+      navigate('/home')
+    }
     setForm({
       email: "",
       password: "",
@@ -78,7 +102,7 @@ const UserRegister = () => {
           />
 
           <button className="bg-[#111] rounded px-4 py-2 text-white mt-2">
-            Login
+            Create Account
           </button>
           <p className="my-3 text-center">
             Already have a account?{" "}
