@@ -16,9 +16,9 @@ const UserLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    // console.log(form);
     const response = await axiosInstance.post("/user/login", form);
-    console.log(response);
+    // console.log(response);
 
     if (response) {
       setUser(response.data.user);

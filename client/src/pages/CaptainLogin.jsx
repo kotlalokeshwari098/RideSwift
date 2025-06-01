@@ -21,6 +21,7 @@ const CaptainLogin = () => {
     
     if(response){
       setCaptain(response.data.captain)
+      // console.log(typeof response.data.token)
       localStorage.setItem('token',response.data.token)
       navigate('/captainhome')
       setForm({
