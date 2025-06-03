@@ -116,6 +116,7 @@ const Home = () => {
       </div>
 
       <div className="fixed z-100 bottom-0 bg-white p-3 w-full" ref={vehiclePanelRef}>
+         <h5 className="" onClick={()=>setVehiclePanelOpen(false)}><i className="ri-arrow-down-wide-line"></i></h5>
         <h3 className="text-2xl font-semibold mb-3">Choose a Vehicle</h3>
         <div className="flex items-center justify-between gap-3 w-full border-2  rounded-xl p-2  active:border-black mb-2 border-gray-200">
            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh5PZ4E5PBYLBwSlIIYPmpkNpYxzRwqdmcVA&s" alt="" className="h-14"/>
