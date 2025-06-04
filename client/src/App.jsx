@@ -10,7 +10,7 @@ import UserProtectWrapper from './pages/UserProtectWrapper'
 import UserLogout from './pages/UserLogout'
 import CaptainProtectWrapper from './pages/CaptainProtectWrapper'
 import CaptainHome from './pages/CaptainHome'
-
+import Riding from './pages/Riding'
 
 
 const routes=createBrowserRouter( createRoutesFromElements(
@@ -25,6 +25,14 @@ const routes=createBrowserRouter( createRoutesFromElements(
                <Home/>
           </UserProtectWrapper>
         }/> 
+        <Route path='/riding' element={
+          // <UserProtectWrapper>
+            <Riding />
+          // </UserProtectWrapper>
+        }
+        />
+
+        
 
        <Route path="/userlogout" element={
         <UserProtectWrapper>
