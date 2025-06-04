@@ -6,6 +6,7 @@ import LocationSearchPanel from "../components/LocationSearchPanel";
 import VehiclePanel from "../components/VehiclePanel";
 import ConfirmedRide from "../components/ConfirmedRide";
 import LookingForDriver from "../components/LookingForDriver";
+import WaitForDriver from "../components/WaitForDriver";
 
 
 const Home = () => {
@@ -24,6 +25,9 @@ const Home = () => {
 
   const [vehicleFound,setVehicleFound]=useState(false)
   const vehicleFoundRef=useRef(null)
+  const waitingForDriverRef=useRef(null)
+  const [waitingForDriver,setWaitingForDriver]=useState(false)
+
 
   function handleSubmit(e){
   
@@ -95,6 +99,18 @@ const Home = () => {
     }
 }, [vehicleFound]);
 
+  useGSAP(() => {
+  if(waitingForDriver){
+          gsap.to(waitingForDriverRef.current,{
+           transform:'translateY(0)'
+     })}  
+    else{
+        gsap.to(waitingForDriverRef.current,{
+           transform:'translateY(100%)'
+     })
+    }
+}, [waitingForDriver]);
+
 
    console.log(panelOpen)
   return (
@@ -154,9 +170,14 @@ const Home = () => {
         <ConfirmedRide setConfirmRidePanel={setConfirmRidePanel} setVehiclePanelOpen={setVehiclePanelOpen}  setVehicleFound={setVehicleFound}/>
         
       </div>
-      <div className="fixed z-100 bottom-0 bg-white p-3 w-full" ref={vehicleFoundRef} setConfirmRidePanel={setConfirmRidePanel}>
+      <div className="fixed z-100 bottom-0 bg-white p-3 w-full" ref={vehicleFoundRef} >
        
-        <LookingForDriver />
+        <LookingForDriver setVehicleFound={setVehicleFound}/>
+      </div>
+
+      <div className="fixed z-100 bottom-0 bg-white p-3 w-full" ref={waitingForDriverRef} >
+       
+        <WaitForDriver setWaitingForDriver={setWaitingForDriver}/>
       </div>
     </div>
   );
