@@ -25,7 +25,7 @@ const CaptainProtectWrapper = ({ children }) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setCaptain(response.data.captain);
+        setCaptain(response.data);
         setIsLoading(false);
       } catch (error) {
         console.log(error.message);
@@ -33,7 +33,7 @@ const CaptainProtectWrapper = ({ children }) => {
         navigate("/captainlogin");
       }
     })();
-  });
+  },[token,setCaptain,navigate]);
 
   if (isLoading) {
     return <div>laoding...</div>;

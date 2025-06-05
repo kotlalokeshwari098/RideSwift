@@ -11,6 +11,7 @@ import UserLogout from './pages/UserLogout'
 import CaptainProtectWrapper from './pages/CaptainProtectWrapper'
 import CaptainHome from './pages/CaptainHome'
 import Riding from './pages/Riding'
+import CaptainRiding from './pages/CaptainRiding'
 
 
 const routes=createBrowserRouter( createRoutesFromElements(
@@ -20,6 +21,7 @@ const routes=createBrowserRouter( createRoutesFromElements(
        <Route path='/signup' element={<UserSignup/>}/>
        <Route path='/captainlogin' element={<CaptainLogin/>}/>
        <Route path='/captainsignup' element={<CaptainSignup/>}/> 
+       <Route path='/captainriding' element={<CaptainRiding />}/> 
        <Route path='/home'  element={
           <UserProtectWrapper>
                <Home/>
