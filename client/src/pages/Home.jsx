@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {useGSAP} from '@gsap/react';
 import gsap from "gsap";
 import 'remixicon/fonts/remixicon.css'
@@ -7,7 +7,7 @@ import VehiclePanel from "../components/VehiclePanel";
 import ConfirmedRide from "../components/ConfirmedRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitForDriver from "../components/WaitForDriver";
-
+import { mapService } from "../services/api.service";
 
 const Home = () => {
 
@@ -15,7 +15,11 @@ const Home = () => {
     pickupLocation:'',
     destinationLocation:''
   })
+  const [activeField, setActiveField] = useState(null); // 'pickup' or 'destination'
   const [panelOpen,setPanelOpen]=useState(false)
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
   const panelRef=useRef(null)
   const panelCloseRef=useRef(null)
   const vehiclePanelRef=useRef(null)
@@ -28,16 +32,72 @@ const Home = () => {
   const waitingForDriverRef=useRef(null)
   const [waitingForDriver,setWaitingForDriver]=useState(false)
 
+  // Fetch suggestions when input changes
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!activeField) return;
+      
+      const query = activeField === 'pickup' ? form.pickupLocation : form.destinationLocation;
+      
+      if (query.length < 3) {
+        setSuggestions([]);
+        return;
+      }
+      
+      try {
+        setLoading(true);
+        const data = await mapService.getAddressSuggestions(query);
+        
+        if (data && data.features) {
+          // Transform the response to a more usable format
+          const formattedSuggestions = data.features.map(feature => {
+            const props = feature.properties;
+            const address = [
+              props.name,
+              props.street,
+              props.city,
+              props.state,
+              props.country
+            ].filter(Boolean).join(', ');
+            
+            return {
+              address,
+              coordinates: feature.geometry.coordinates
+            };
+          });
+          
+          setSuggestions(formattedSuggestions);
+        }
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        setSuggestions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(debounceTimer);
+  }, [form.pickupLocation, form.destinationLocation, activeField]);
 
   function handleSubmit(e){
-  
     e.preventDefault();
     console.log(form);
-    setForm({
-      pickupLocation:'',
-      destinationLocation:''
-    })
   }
+
+  const handleInputFocus = (field) => {
+    setActiveField(field);
+    setPanelOpen(true);
+  };
+
+  const handleSelectLocation = (selectedLocation) => {
+    if (activeField === 'pickup') {
+      setForm(prev => ({...prev, pickupLocation: selectedLocation.address}));
+    } else if (activeField === 'destination') {
+      setForm(prev => ({...prev, destinationLocation: selectedLocation.address}));
+    }
+    
+  };
 
   //GSAP hooks for animations for panels
   useGSAP(() => {
@@ -111,6 +171,10 @@ const Home = () => {
     }
 }, [waitingForDriver]);
 
+   function findTrip(){
+    setVehiclePanelOpen(true)
+    setPanelOpen(false)
+   }
 
    console.log(panelOpen)
   return (
@@ -142,7 +206,8 @@ const Home = () => {
               className="bg-[#eee] px-12 py-2 text-lg rounded-lg my-3 w-full "
               value={form.pickupLocation}
               onChange={(e)=>setForm((prev)=>({...prev,pickupLocation:e.target.value}))}
-              onClick={()=>setPanelOpen(true)}
+              onClick={()=>handleInputFocus('pickup')}
+              onFocus={()=>handleInputFocus('pickup')}
             />
             <input
               type="text"
@@ -150,15 +215,29 @@ const Home = () => {
               className="bg-[#eee] px-12 py-2 text-lg rounded-lg w-full"
               value={form.destinationLocation}
               onChange={(e)=>setForm((prev)=>({...prev,destinationLocation:e.target.value}))}
-              onClick={()=>setPanelOpen(true)}
+              onClick={()=>handleInputFocus('destination')}
+              onFocus={()=>handleInputFocus('destination')}
             />
           </form>
+          <button
+            className="mt-4 w-full bg-black text-white py-3 rounded-lg text-lg font-semibold hover:bg-gray-900 transition-colors duration-200"
+            onClick={findTrip}
+          >
+             Find Trip
+          </button>
         </div>
        <div
           ref={panelRef}
           className="bg-white w-full"
         >
-          <LocationSearchPanel setPanelOpen={setPanelOpen} setVehiclePanel={setVehiclePanelOpen}/>
+          <LocationSearchPanel 
+            setPanelOpen={setPanelOpen} 
+            setVehiclePanel={setVehiclePanelOpen}
+            suggestions={suggestions}
+            loading={loading}
+            activeField={activeField}
+            onSelectLocation={handleSelectLocation}
+          />
         </div>
       </div>
 
