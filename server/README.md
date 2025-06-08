@@ -915,3 +915,65 @@ Content-Type: application/json
 }
 ```
 
+### Get Fare Estimate
+
+Estimates the fare for a ride based on pickup and destination locations.
+
+**URL:** `/ride/getfare`
+
+**Method:** `GET`
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Query Parameters:**
+- `pickup`: The pickup location address (required, minimum 3 characters)
+- `destination`: The destination location address (required, minimum 3 characters)
+- `vehicleType`: The type of vehicle for the ride (required, must be one of: "auto", "car", "motorcycle")
+
+**Response:**
+```json
+{
+  "fare": number
+}
+```
+
+**Status Codes:**
+- `200 OK`: Successfully estimated fare
+- `400 Bad Request`: Invalid parameters or validation error
+- `404 Not Found`: Locations not found or fare calculation failed
+
+**Example Request:**
+```
+GET /ride/getfare?pickup=Banjara Hills, Hyderabad&destination=Gachibowli, Hyderabad&vehicleType=auto
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Example Success Response:**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "fare": 150
+}
+```
+
+**Example Error Response:**
+```json
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+  "errors": [
+    {
+      "msg": "Invalid vehicleType address",
+      "param": "vehicleType",
+      "location": "query"
+    }
+  ]
+}
+```
+

@@ -1,11 +1,12 @@
 import React from 'react'
 
-const ConfirmedRide = ({setConfirmRidePanel,setVehiclePanelOpen,setVehicleFound}) => {
+const ConfirmedRide = (props) => {
+  console.log(props.vehicleType)
   return (
     <div>
         <h5 className="" onClick={()=>{
-            setConfirmRidePanel(false)
-            setVehiclePanelOpen(false)
+            props.setConfirmRidePanel(false)
+             props.setVehiclePanelOpen(false)
            
             }}><i className="ri-arrow-down-wide-line"></i></h5>
         <h3 className="text-2xl font-semibold mb-3">Confirm your Ride</h3>
@@ -18,20 +19,20 @@ const ConfirmedRide = ({setConfirmRidePanel,setVehiclePanelOpen,setVehicleFound}
                     <i className="ri-map-pin-2-line text-lg"></i>
                     <div>
                       <h3 className='text-lg font-bold'>562/11-8</h3>
-                      <p className='text-base text-gray-600'>Kankariya Talab,Bhopal</p>
+                      <p className='text-base text-gray-600'>{props.pickupLocation}</p>
                     </div>
                </div>
                <div className='flex items-center gap-3 p-3 border-b-2 border-gray-300'>
                     <i className="ri-map-pin-2-line text-lg"></i>
                     <div>
                       <h3 className='text-lg font-bold'>562/11-8</h3>
-                      <p className='text-base text-gray-600'>Kankariya Talab,Bhopal</p>
+                      <p className='text-base text-gray-600'>{props.destinationLocation}</p>
                     </div>
                </div>
                <div className='flex items-center gap-3 p-3 '>
                    <i className="ri-cash-line"></i>
                     <div>
-                      <h3 className='text-lg font-bold'>193.20</h3>
+                      <h3 className='text-lg font-bold'>₹{props.fare[props.vehicleType]}</h3>
                       <p className='text-base text-gray-600'>Cash-cash</p>
                     </div>
                </div>
@@ -43,8 +44,10 @@ const ConfirmedRide = ({setConfirmRidePanel,setVehiclePanelOpen,setVehicleFound}
           <button 
           className='w-full bg-green-600 text-white font-semibold p-2 rounded-lg' 
           onClick={()=>{
-            setVehicleFound(true) 
-            setConfirmRidePanel(false)
+             props.setVehicleFound(true) 
+             props.setConfirmRidePanel(false)
+             props.createRide()
+
           }}>Confirm</button>
         </div>
     </div>

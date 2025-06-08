@@ -8,6 +8,7 @@ import ConfirmedRide from "../components/ConfirmedRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitForDriver from "../components/WaitForDriver";
 import { mapService } from "../services/api.service";
+import axiosInstance from '../api/axiosConfig'
 
 const Home = () => {
 
@@ -31,6 +32,10 @@ const Home = () => {
   const vehicleFoundRef=useRef(null)
   const waitingForDriverRef=useRef(null)
   const [waitingForDriver,setWaitingForDriver]=useState(false)
+
+  const [fare,setFare]=useState({})
+
+  const [vehicleType,setVehicleType]=useState('')
 
   // Fetch suggestions when input changes
   useEffect(() => {
@@ -171,11 +176,38 @@ const Home = () => {
     }
 }, [waitingForDriver]);
 
-   function findTrip(){
+
+//to get the fare for the different vehicles
+ async  function findTrip(){
     setVehiclePanelOpen(true)
     setPanelOpen(false)
+    const token=localStorage.getItem('token')
+     const response = await axiosInstance.get('/ride/getfare',{
+        params:{
+          pickup:form.pickupLocation,destination:form.destinationLocation
+        },
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+     })
+     setFare(response.data)
+     console.log(response.data)
+
    }
 
+  async function createRide(){
+      const token=localStorage.getItem('token')
+      const response=await axiosInstance.post('/ride/create',{
+        pickup:form.pickupLocation,
+        destination:form.destinationLocation,
+        vehicleType
+      },{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      console.log(response.data)
+   }
    console.log(panelOpen)
   return (
     <div className="h-screen relative overflow-hidden">
@@ -242,19 +274,35 @@ const Home = () => {
       </div>
 
       <div className="fixed z-100 bottom-0 bg-white p-3 w-full" ref={vehiclePanelRef}>
-        <VehiclePanel setVehiclePanelOpen={setVehiclePanelOpen} setConfirmRidePanel={setConfirmRidePanel}/>
+        <VehiclePanel 
+        setVehiclePanelOpen={setVehiclePanelOpen} setConfirmRidePanel={setConfirmRidePanel} 
+        fare={fare}  
+        setVehicleType={setVehicleType}/>
         
       </div>
       <div className="fixed z-100 bottom-0 bg-white p-3 w-full" ref={confirmRidePanelRef}>
-        <ConfirmedRide setConfirmRidePanel={setConfirmRidePanel} setVehiclePanelOpen={setVehiclePanelOpen}  setVehicleFound={setVehicleFound}/>
+        <ConfirmedRide 
+         fare={fare} 
+         vehicleType={vehicleType}
+         createRide={createRide}
+        pickupLocation={form.pickupLocation}
+        destinationLocation={form.destinationLocation}
+        setConfirmRidePanel={setConfirmRidePanel} setVehiclePanelOpen={setVehiclePanelOpen}  setVehicleFound={setVehicleFound}
+        />
         
       </div>
       <div className="fixed z-100 bottom-0 bg-white p-3 w-full" ref={vehicleFoundRef} >
        
-        <LookingForDriver setVehicleFound={setVehicleFound}/>
+        <LookingForDriver 
+        fare={fare} 
+         vehicleType={vehicleType}
+         createRide={createRide}
+        pickupLocation={form.pickupLocation}
+        destinationLocation={form.destinationLocation}        
+        setVehicleFound={setVehicleFound}/>
       </div>
 
-      <div className="fixed z-100 bottom-0 bg-white p-3 w-full" ref={waitingForDriverRef} >
+      <div className="fixed z-100 bottom-[-10] bg-white p-3 w-full" ref={waitingForDriverRef} >
        
         <WaitForDriver setWaitingForDriver={setWaitingForDriver}/>
       </div>
