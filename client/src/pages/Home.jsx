@@ -158,7 +158,7 @@ const Home = () => {
           ref={panelRef}
           className="bg-white w-full"
         >
-            <LocationSearchPanel setPanelOpen={setPanelOpen} setVehiclePanel={setVehiclePanelOpen}/>
+          <LocationSearchPanel setPanelOpen={setPanelOpen} setVehiclePanel={setVehiclePanelOpen}/>
         </div>
       </div>
 
