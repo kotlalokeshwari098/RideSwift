@@ -1,5 +1,6 @@
 module.exports.haversine=(lat1, lon1, lat2, lon2)=>
     {
+        console.log(lat1,lon1,lat2,lon2)
         // distance between latitudes
         // and longitudes
         let dLat = (lat2 - lat1) * Math.PI / 180.0;

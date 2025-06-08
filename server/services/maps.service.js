@@ -40,17 +40,18 @@ module.exports.getAddressCordinate = async (address) => {
   }
 };
 
-module.exports.getDistanceTime = async (origin, destination) => {
+module.exports.getDistance = async (origin, destination) => {
+  console.log(origin,destination)
   if (!origin || !destination) {
     throw new Error("origin and destination are required");
   }
   const distance = distanceCalculate.haversine(
-    origin.latitute,
+    origin.latitue,
     origin.longitude,
-    destination.latitude,
+    destination.latitue,
     destination.longitude
   );
-  console.log(distance);
+  console.log("distance is",distance);
   return distance;
 };
 

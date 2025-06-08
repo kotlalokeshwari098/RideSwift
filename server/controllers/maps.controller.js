@@ -26,7 +26,14 @@ module.exports.getDistanceTime=async(req,res)=>{
     console.log(req);
     const {origin,destination}= req.query
     try{
-         const dist=await mapServicce.getDistanceTime(origin,destination)
+         const originCoordinates=await mapServicce.getAddressCordinate(origin);
+         const destinationCoordinates=await mapServicce.getAddressCordinate(destination);
+
+         if(!originCoordinates || !destinationCoordinates){
+            return res.status(404).json({message:"coordinates not found"})
+         }
+
+         const dist=await mapServicce.getDistance(originCoordinates,destinationCoordinates)
          res.send(dist)
     }
     catch(error){
