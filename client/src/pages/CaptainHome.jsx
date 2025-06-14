@@ -5,8 +5,14 @@ import RidePopUp from '../components/RidePopUp'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
+import { useContext } from 'react'
+import { CaptainDataContext } from '../context/CaptainContext'
+import { useEffect } from 'react'
+import { SocketContext } from '../context/SocketContext'
 
 const CaptainHome = () => {
+    const {captain}=useContext(CaptainDataContext)
+    const {socket}=useContext(SocketContext)
 
     const [ ridePopupPanel, setRidePopupPanel ] = useState(false)
     const [ confirmRidePopupPanel, setConfirmRidePopupPanel ] = useState(false)
@@ -39,6 +45,11 @@ const CaptainHome = () => {
         }
     }, [ confirmRidePopupPanel ])
 
+    useEffect(()=>{
+        if(!captain) return;
+
+    socket.emit('join',{userType:"captain",userId:captain._id})
+    },[captain,socket])
     return (
         <div className='h-screen'>
             <div className='fixed p-6 top-0 flex items-center justify-between w-screen'>

@@ -9,9 +9,14 @@ import LookingForDriver from "../components/LookingForDriver";
 import WaitForDriver from "../components/WaitForDriver";
 import { mapService } from "../services/api.service";
 import axiosInstance from '../api/axiosConfig'
+import { SocketContext } from "../context/SocketContext";
+import { useContext } from "react";
+import {UserDataContext} from '../context/UserContext'
 
 const Home = () => {
 
+  const {socket}=useContext(SocketContext)
+  const {user}=useContext(UserDataContext)
   const [form,setForm]=useState({
     pickupLocation:'',
     destinationLocation:''
@@ -209,6 +214,19 @@ const Home = () => {
       console.log(response.data)
    }
    console.log(panelOpen)
+
+
+   useEffect(()=>{
+    if(!user) return;
+     socket.emit('join',{
+      userType:"user",
+      userId:user._id
+     })
+    console.log(user)
+    
+   },[user,socket])
+   
+
   return (
     <div className="h-screen relative overflow-hidden">
       <img
@@ -302,7 +320,7 @@ const Home = () => {
         setVehicleFound={setVehicleFound}/>
       </div>
 
-      <div className="fixed z-100 bottom-[-10] bg-white p-3 w-full" ref={waitingForDriverRef} >
+      <div className="fixed z-100 bottom-[-20] bg-white p-3 w-full" ref={waitingForDriverRef} >
        
         <WaitForDriver setWaitingForDriver={setWaitingForDriver}/>
       </div>

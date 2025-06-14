@@ -24,7 +24,7 @@ const UserProtectWrapper = ({ children }) => {
           }
          }).then((response)=>{
               setIsLoading(false)
-              setUser(response.data.user)
+              setUser(response.data)
               navigate('/home')
          }).catch((err)=>{
           console.log(err.message);
