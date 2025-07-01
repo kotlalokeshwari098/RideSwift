@@ -28,12 +28,18 @@ module.exports.createRide = async (req, res) => {
     // res.status(201).json(ride);
 
     const pickupCoordinate=await mapService.getAddressCordinate(pickup)
-    // console.log(pickupCoordinate)
-    const captainsInRadius=await mapService.getCaptainInRadius(pickupCoordinate.latitue,pickupCoordinate.longitude,2)
+    console.log("pickupCoordinate",pickupCoordinate)
+    console.log("pickupCoordinate",pickupCoordinate)
+
+    if (!pickupCoordinate || !pickupCoordinate.latitude || !pickupCoordinate.longitude) {
+      return res.status(400).json({ message: "Invalid pickup address" });
+    }
+
+    const captainsInRadius=await mapService.getCaptainInRadius(pickupCoordinate.longitude,pickupCoordinate.latitude,5)
 
     console.log(captainsInRadius,"radius")
-    ride.otp=""
-    return res.status(200).json({capains:captainsInRadius,ride})
+    ride.otp="" 
+    return res.status(200).json({captains:captainsInRadius,ride})
 
   } catch (err) {
     console.log(err.message);

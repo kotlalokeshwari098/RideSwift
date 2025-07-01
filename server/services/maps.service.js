@@ -30,7 +30,7 @@ module.exports.getAddressCordinate = async (address) => {
       // console.log(response.data[0])
       // console.log(response.data[0].lat)
 
-      return { latitue: parseFloat(lat), longitude: parseFloat(lon) };
+      return { latitude: parseFloat(lat), longitude: parseFloat(lon) };
     } else {
       return {
         message: "No coordinates found for the provided address",
@@ -48,9 +48,9 @@ module.exports.getDistance = async (origin, destination) => {
     throw new Error("origin and destination are required");
   }
   const distance = distanceCalculate.haversine(
-    origin.latitue,
+    origin.latitude,
     origin.longitude,
-    destination.latitue,
+    destination.latitude,
     destination.longitude
   );
   console.log("distance is", distance);
@@ -83,17 +83,25 @@ module.exports.getSuggestionsFromNominatim = async (input) => {
   }
 };
 
-module.exports.getCaptainInRadius = async (lat, lng, radius) => {
-  // console.log("ltd", lat, lng, radius);
+module.exports.getCaptainInRadius = async (lng, lat, radius) => {
+  console.log("ltd", lat, lng, radius);
+  //radius is in km
   lat = Number(lat);
   lng = Number(lng);
   radius = Number(radius);
+   console.log("ltd", lat, lng, radius);
+   console.log("ltd", typeof lat, typeof lng, typeof radius);
+   console.log(captainModel)
   const captains = await captainModel.find({
     location: {
-      $geoWithin: {
-        $centerSphere: [[lng, lat], radius / 6371],
+      
+          $geoWithin: {
+            $centerSphere: [[lng,lat], radius / 6371],
       },
+      
+      
     },
   });
+  console.log(captains,"captains")
   return captains;
 };

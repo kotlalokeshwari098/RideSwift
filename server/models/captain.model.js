@@ -58,16 +58,20 @@ const captainSchema = new mongoose.Schema({
     },
 
     location: {
-        ltd: {
-            type: Number,
-        },
-        lng: {
-            type: Number,
-        }
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point',
+      required: true
+    },
+    coordinates: {
+      type: [Number] 
     }
+  }
 })
 
-
+// Required for geospatial queries
+captainSchema.index({ location: '2dsphere' });
 
 const captainModel = mongoose.model('captain', captainSchema)
 
