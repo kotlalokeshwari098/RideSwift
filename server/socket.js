@@ -37,6 +37,10 @@ function initializeSocket(server) {
         socket.on('update-location-captain',async(data)=>{
              const {userId,location}=data;
 
+             if(!location || !location.ltd || !location.longitude || !userId){
+                return socket.emit('error',{message:"Invalid location data"})
+             }
+
              console.log(userId,"update location to",location)
               if(!location || !userId){
                 return socket.emit("Error",{message:"invalid locaion"})
