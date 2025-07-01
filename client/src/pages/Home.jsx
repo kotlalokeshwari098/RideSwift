@@ -217,6 +217,7 @@ const Home = () => {
 
 
    useEffect(()=>{
+    console.log("user hi thats me i am the problem",user)
     if(!user) return;
      socket.emit('join',{
       userType:"user",
@@ -309,7 +310,7 @@ const Home = () => {
         />
         
       </div>
-      <div className="fixed z-100 bottom-0 bg-white p-3 w-full" ref={vehicleFoundRef} >
+      <div className="fixed z-100 bottom-[-2] bg-white p-3 w-full" ref={vehicleFoundRef} >
        
         <LookingForDriver 
         fare={fare} 

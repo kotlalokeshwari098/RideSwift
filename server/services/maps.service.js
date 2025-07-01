@@ -1,5 +1,7 @@
 const axios = require("axios");
 const distanceCalculate = require("../utils/distance.calculate");
+const { listIndexes } = require("../models/user.model");
+const captainModel = require("../models/captain.model");
 
 module.exports.getAddressCordinate = async (address) => {
   try {
@@ -41,7 +43,7 @@ module.exports.getAddressCordinate = async (address) => {
 };
 
 module.exports.getDistance = async (origin, destination) => {
-  console.log(origin,destination)
+  console.log(origin, destination);
   if (!origin || !destination) {
     throw new Error("origin and destination are required");
   }
@@ -51,7 +53,7 @@ module.exports.getDistance = async (origin, destination) => {
     destination.latitue,
     destination.longitude
   );
-  console.log("distance is",distance);
+  console.log("distance is", distance);
   return distance;
 };
 
@@ -79,4 +81,19 @@ module.exports.getSuggestionsFromNominatim = async (input) => {
   } catch (error) {
     throw err;
   }
+};
+
+module.exports.getCaptainInRadius = async (lat, lng, radius) => {
+  // console.log("ltd", lat, lng, radius);
+  lat = Number(lat);
+  lng = Number(lng);
+  radius = Number(radius);
+  const captains = await captainModel.find({
+    location: {
+      $geoWithin: {
+        $centerSphere: [[lng, lat], radius / 6371],
+      },
+    },
+  });
+  return captains;
 };

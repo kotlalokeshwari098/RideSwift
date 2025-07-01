@@ -45,11 +45,31 @@ const CaptainHome = () => {
         }
     }, [ confirmRidePopupPanel ])
 
-    useEffect(()=>{
-        if(!captain) return;
+     useEffect(() => {
+        socket.emit('join', {
+            userId: captain._id,
+            userType: 'captain'
+        })
+        const updateLocation = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
 
-    socket.emit('join',{userType:"captain",userId:captain._id})
-    },[captain,socket])
+                    socket.emit('update-location-captain', {
+                        userId: captain._id,
+                        location: {
+                            ltd: position.coords.latitude,
+                            lng: position.coords.longitude
+                        }
+                    })
+                })
+            }
+        }
+
+        // const locationInterval = setInterval(updateLocation, 10000)
+        updateLocation()
+
+        // return () => clearInterval(locationInterval)
+    }, [])
     return (
         <div className='h-screen'>
             <div className='fixed p-6 top-0 flex items-center justify-between w-screen'>
