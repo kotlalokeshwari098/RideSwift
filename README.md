@@ -45,33 +45,42 @@ RideSwift is a ride-hailing application that connects passengers with nearby dri
 
 ## 📦 Setup Instructions
 
-### 1. Clone the Repository
+### 1. Fork the Repository
+Go to [RideSwift Repository](https://github.com/kotlalokeshwari098/RideSwift) and click the **Fork** button in the top-right corner to create a copy under your GitHub account.
+
+### 2. Clone Your Forked Repository
 ```bash
-git clone https://github.com/kotlalokeshwari098/RideSwift.git
+git clone https://github.com/<your-username>/RideSwift.git
+NOTE:Replace <your-username> with your actual GitHub username.
 cd RideSwift
 ```
-### 2. Install Server Dependencies
+### 3. Install Server Dependencies
 ```bash
 cd server
 npm install
 ```
-### 3. Install Client Dependencies
+### 4. Install Client Dependencies
 ```bash
 cd client
 npm install
 ```
-### 4. Set Up Environment Variables
+### 5. Set Up Environment Variables
+Create a .env file in the server directory with the following:
 ```bash
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
+DB_CONNECT=your-db-connection
+JWT_SECRET=your_jwt_secret_here
+
+# Optional external geolocation APIs
+NOMINATIM_MAPS=https://example.com/nominatim/search
+PHOTON_URL=https://example.com/photon/api
 ```
-### 5. Run the Server
+### 6. Run the Server
 ```bash
 cd server
 npm run dev
 ```
-### 6. Run the Client
+### 7. Run the Client
 ```bash
 cd client
 npm run dev
