@@ -10,7 +10,7 @@ function initializeSocket(server) {
     cors: {
       origin: "*",
       methods: ["GET", "POST"],
-    },
+    }, 
   });
 
   io.on("connection", (socket) => {
@@ -60,7 +60,7 @@ function initializeSocket(server) {
 }
 
 const sendMessageToSocketId = (socketId, messageObject) => {
-  console.log(messageObject);
+  console.log(messageObject,"messageObject");
 
   if (io) {
     io.to(socketId).emit(messageObject.event, messageObject.data);

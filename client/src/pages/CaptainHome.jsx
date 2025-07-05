@@ -81,6 +81,11 @@ const CaptainHome = () => {
     return () => clearInterval(locationInterval)
   });
 
+  socket.on("new-ride",(data)=>{
+    console.log(data);
+    // setConfirmRidePopupPanel()
+  })
+
   return (
     <div className="h-screen">
       <div className="fixed p-6 top-0 flex items-center justify-between w-screen">

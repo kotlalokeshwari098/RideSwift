@@ -1,7 +1,8 @@
 const rideService = require("../services/ride.service");
 const mapService = require("../services/maps.service");
 const { validationResult } = require("express-validator");
-
+const {sendMessageToSocketId} =require("../socket");
+const rideModel = require("../models/ride.model");
 
 module.exports.createRide = async (req, res) => {
   const errors = validationResult(req);
@@ -35,10 +36,19 @@ module.exports.createRide = async (req, res) => {
       return res.status(400).json({ message: "Invalid pickup address" });
     }
 
-    const captainsInRadius=await mapService.getCaptainInRadius(pickupCoordinate.longitude,pickupCoordinate.latitude,5)
+    const captainsInRadius=await mapService.getCaptainInRadius(pickupCoordinate.longitude,pickupCoordinate.latitude,10)
 
     console.log(captainsInRadius,"radius")
     ride.otp="" 
+
+    const rideWithUser= await rideModel.findById(ride.id).populate('user')
+    console.log(rideWithUser)
+    captainsInRadius.map(captain=>{
+         sendMessageToSocketId(captain.socketId,{
+            event:"new-ride",
+            data:rideWithUser
+         })
+    })
     return res.status(200).json({captains:captainsInRadius,ride})
 
   } catch (err) {
