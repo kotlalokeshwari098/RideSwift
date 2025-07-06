@@ -11,7 +11,7 @@ async function getFare(pickup, destination,vehicleType) {
     }
 
     const distanceTime = await mapService.getDistance(pickup, destination);
-    console.log(typeof distanceTime)
+    // console.log(typeof distanceTime)
 
     const baseFare = {
         auto: 30,
@@ -32,7 +32,7 @@ async function getFare(pickup, destination,vehicleType) {
     };
 
     const distanceTimeInMinutes= estimatedTime.getEstimatedTime(distanceTime,vehicleType)
-    console.log(distanceTimeInMinutes)
+    // console.log(distanceTimeInMinutes)
     const fare = {
         auto: Math.round(baseFare.auto + ((distanceTime / 1000) * perKmRate.auto) + ((distanceTimeInMinutes.duration) * perMinuteRate.auto)),
         car: Math.round(baseFare.car + ((distanceTime / 1000) * perKmRate.car) + ((distanceTimeInMinutes.duration ) * perMinuteRate.car)),
@@ -59,14 +59,14 @@ function getOtp(num) {
 module.exports.createRideService = async ({
     user, pickup, destination, vehicleType
 }) => {
-    console.log("hello creating ride")
-    console.log(user,pickup,destination,vehicleType)
+    // console.log("hello creating ride")
+    // console.log(user,pickup,destination,vehicleType)
     if (!user || !pickup || !destination || !vehicleType) {
         throw new Error('All fields are required');
     }
 
     const originCoordinate=await mapService.getAddressCordinate(pickup);
-            console.log(originCoordinate)
+            // console.log(originCoordinate)
     const destinationCoordinate=await mapService.getAddressCordinate(destination)
     const fare = await getFare(originCoordinate, destinationCoordinate,vehicleType);
     const ride = await rideModel.create({
@@ -84,8 +84,9 @@ module.exports.createRideService = async ({
 }
 
 module.exports.confirmRide = async ({
-    rideId, captain
+    rideId,captainId
 }) => {
+    console.log(rideId,captainId)
     if (!rideId) {
         throw new Error('Ride id is required');
     }
@@ -94,7 +95,7 @@ module.exports.confirmRide = async ({
         _id: rideId
     }, {
         status: 'accepted',
-        captain: captain._id
+        captain: captainId
     })
 
     const ride = await rideModel.findOne({

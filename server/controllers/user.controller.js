@@ -52,7 +52,7 @@ module.exports.loginUser = async (req, res, next) => {
 
   const { email, password } = req.body;
   const user = await userModel.findOne({ email }).select("+password");
-  console.log("hashed password", user.password);
+  // console.log("hashed password", user.password);
 
   if (!user) {
     return res.status(401).json({ message: "Invalid email or password" });
@@ -75,7 +75,7 @@ module.exports.loginUser = async (req, res, next) => {
 };
 
 module.exports.getUserProfile = async (req, res, next) => {
-  console.log("user profile");
+  // console.log("user profile");
   res.status(200).json(req.user);
 };
 

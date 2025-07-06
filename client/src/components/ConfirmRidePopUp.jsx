@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
+
 
 const ConfirmRidePopUp = (props) => {
   const [otp, setOtp] = useState("");
+  const navigate = useNavigate()
 
   const submitHander = async (e) => {
     e.preventDefault();
@@ -67,7 +70,8 @@ const ConfirmRidePopUp = (props) => {
             />
 
             <Link to="/captainriding">
-              <button className="w-full mt-5 text-lg flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg">
+              <button className="w-full mt-5 text-lg flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg"
+              >
                 Confirm
               </button>
             </Link>

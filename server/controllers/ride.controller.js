@@ -9,7 +9,7 @@ module.exports.createRide = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  console.log(req.body);
+  // console.log(req.body);
   const { pickup, destination, vehicleType } = req.body;
 
   try {
@@ -24,13 +24,13 @@ module.exports.createRide = async (req, res) => {
       destination,
       vehicleType,
     });
-    console.log(ride);
+    // console.log(ride);
 
     // res.status(201).json(ride);
 
     const pickupCoordinate=await mapService.getAddressCordinate(pickup)
-    console.log("pickupCoordinate",pickupCoordinate)
-    console.log("pickupCoordinate",pickupCoordinate)
+    // console.log("pickupCoordinate",pickupCoordinate)
+    // console.log("pickupCoordinate",pickupCoordinate)
 
     if (!pickupCoordinate || !pickupCoordinate.latitude || !pickupCoordinate.longitude) {
       return res.status(400).json({ message: "Invalid pickup address" });
@@ -38,11 +38,11 @@ module.exports.createRide = async (req, res) => {
 
     const captainsInRadius=await mapService.getCaptainInRadius(pickupCoordinate.longitude,pickupCoordinate.latitude,10)
 
-    console.log(captainsInRadius,"radius")
+    // console.log(captainsInRadius,"radius")
     ride.otp="" 
 
     const rideWithUser= await rideModel.findById(ride.id).populate('user')
-    console.log(rideWithUser)
+    // console.log(rideWithUser)
     captainsInRadius.map(captain=>{
          sendMessageToSocketId(captain.socketId,{
             event:"new-ride",
@@ -52,7 +52,7 @@ module.exports.createRide = async (req, res) => {
     return res.status(200).json({captains:captainsInRadius,ride})
 
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     return res.status(500).json({ message: err.message });
   }
 };
@@ -67,7 +67,7 @@ module.exports.getFareEstimate = async (req, res) => {
 
   try {
     const originCoordinate = await mapService.getAddressCordinate(pickup);
-    console.log(originCoordinate);
+    // console.log(originCoordinate);
     const destinationCoordinate = await mapService.getAddressCordinate(
       destination
     );
@@ -80,3 +80,27 @@ module.exports.getFareEstimate = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
+
+module.exports.confirmRide=async(req,res)=>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const {rideId}=req.body;
+  console.log(req.body)
+
+  try{
+    const ride=await rideService.confirmRide({rideId,captain:req.captain});
+
+    sendMessageToSocketId(ride.user.socketId,{
+      event:'ride-confirmed',
+      data:ride
+    })
+    return res.status(200).json(ride);
+  }
+  catch(err){
+    console.log(err)
+    return res.status(500).json({message:err.message});
+  }
+}

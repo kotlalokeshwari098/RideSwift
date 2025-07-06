@@ -46,7 +46,7 @@ module.exports.registerCaption = async (req, res, next) => {
 
 
 module.exports.loginCaption = async (req, res, next) => {
-  console.log('body',req.body);
+  // console.log('body',req.body);
    const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -54,14 +54,14 @@ module.exports.loginCaption = async (req, res, next) => {
 
   const { email, password } = req.body;
   const captain = await captainModel.findOne({ email }).select("+password");
-  console.log("hashed password", captain.password);
+  // console.log("hashed password", captain.password);
 
   if (!captain) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
 
   const comparedResult = await comparePassword(password, captain.password);
-  console.log(comparedResult);
+  // console.log(comparedResult);
 
   if (!comparedResult) {
     return res.status(401).json({ message: "Invalid email or password" });
@@ -77,7 +77,7 @@ module.exports.loginCaption = async (req, res, next) => {
 };
 
 module.exports.getCaptainProfile = async (req, res, next) => {
-  console.log("captain profile");
+  // console.log("captain profile");
   res.status(200).json(req.user);
 };
 
