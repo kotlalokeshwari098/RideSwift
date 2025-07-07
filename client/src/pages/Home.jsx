@@ -36,7 +36,7 @@ const Home = () => {
   const vehicleFoundRef = useRef(null);
   const waitingForDriverRef = useRef(null);
   const [waitingForDriver, setWaitingForDriver] = useState(false);
-
+ console.log(waitingForDriver)
   const [fare, setFare] = useState({});
 
   const [vehicleType, setVehicleType] = useState("");
@@ -236,18 +236,18 @@ const Home = () => {
     });
     console.log(user);
 
-     socket.on('ride-confirmed', ride => {
-         console.log('ride-confirmed received', ride); 
+     
+    
+  }, [user, socket]);
+
+    socket.on('ride-confirmed', ride => {
+        //  console.log('ride-confirmed received', ride); 
 
         setVehicleFound(false)
         setWaitingForDriver(true)
         setRide(ride)
     })
     console.log(waitingForDriver)
-    
-  }, [user, socket, waitingForDriver]);
-
- 
 
   return (
     <div className="h-screen relative overflow-hidden">
@@ -363,7 +363,7 @@ const Home = () => {
         />
       </div>
       <div
-        className="fixed z-100 bottom-[0] bg-white p-3 w-full"
+        className="fixed z-100 bottom-0 p-3 w-full bg-white"
         ref={waitingForDriverRef}
       >
         <WaitForDriver 
